@@ -14,43 +14,43 @@ import { CustomValidationPipe } from './utils/validation/validation.pipe';
  * @param {INestApplication} app INestApplication
  */
 export async function configure<T extends INestApplication>(app: T) {
-    // app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-    // Validation conatainer
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  // Validation conatainer
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    // Config service to setup other global dependencies...
-    const configService: ConfigService = app.get<ConfigService>(ConfigService);
+  // Config service to setup other global dependencies...
+  const configService: ConfigService = app.get<ConfigService>(ConfigService);
 
-    // CORS configuration
-    app.enableCors(configService.get('app.cors'));
+  // CORS configuration
+  app.enableCors(configService.get('app.cors'));
 
-    // Setup app timezone...
-    const momentService: MomentService = await app.resolve(MomentService);
+  // Setup app timezone...
+  const momentService: MomentService = await app.resolve(MomentService);
 
-    momentService.moment.tz.setDefault(configService.get('app.timezone'));
+  momentService.moment.tz.setDefault(configService.get('app.timezone'));
 
-    // Custom Validation Filter
-    const validationPipe = app.get<CustomValidationPipe>(CustomValidationPipe);
+  // Custom Validation Filter
+  const validationPipe = app.get<CustomValidationPipe>(CustomValidationPipe);
 
-    // Global validation pipe
-    app.useGlobalPipes(validationPipe);
+  // Global validation pipe
+  app.useGlobalPipes(validationPipe);
 
-    /** Global prefix. */
-    app.setGlobalPrefix(configService.get('app.apiPrefix'));
+  /** Global prefix. */
+  app.setGlobalPrefix(configService.get('app.apiPrefix'));
 
-    // Well-known threats protection
-    app.use(helmet());
+  // Well-known threats protection
+  app.use(helmet());
 
-    // Gzip compression configuration
-    app.use(compression());
+  // Gzip compression configuration
+  app.use(compression());
 
-    (app as any).set('trust proxy', true);
+  (app as any).set('trust proxy', true);
 
-    (app as any).set('env', configService.get('app.env'));
+  (app as any).set('env', configService.get('app.env'));
 
-    (app as any).set('name', configService.get('app.name'));
+  (app as any).set('name', configService.get('app.name'));
 
-    // Rate limiter
-    app.use(rateLimit(configService.get('app.rateLimiter')));
+  // Rate limiter
+  app.use(rateLimit(configService.get('app.rateLimiter')));
 }

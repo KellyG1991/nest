@@ -1,0 +1,11 @@
+
+enum PolarResponseEnum {
+    YES
+    NO
+}
+
+enum PolarUnsureEnum {
+    YES
+    NO
+    NOT_SURE
+}

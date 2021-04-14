@@ -1,0 +1,25 @@
+interface Response {
+    status: Int!
+    meta: Meta
+}
+
+interface Meta {
+    type: String
+}
+
+type Pagination implements Meta {
+    type: String
+    total: Int
+}
+
+type SuccessResponse implements Response {
+    status: Int!
+    message: String!
+    meta: Meta
+}
+
+type ErrorResponse implements Response {
+    status: Int!
+    error: String!
+    meta: Meta
+}

@@ -1,0 +1,9 @@
+scalar ObjectID
+
+scalar EmailAddress
+
+scalar DateTimeFormat
+
+scalar FutureDateFormat
+
+scalar JSONObject
