@@ -5,7 +5,7 @@ import { exceptionFactory } from "./utils/validation/exceptionFactory";
 import { getRateLimiterStore } from "./utils/rateLimiter/getRateLimiterStore";
 import { CorsOptions } from "@nestjs/common/interfaces/external/cors-options.interface";
 
-export default registerAs('app', () => ({
+export default registerAs( 'app', () => ( {
     apiPrefix: process.env.API_PREFIX || 'api/v1',
     name: process.env.APP_NAME,
     timezone: process.env.TIMEZONE || 'UTC',
@@ -25,16 +25,16 @@ export default registerAs('app', () => ({
         exceptionFactory,
     } as ValidationPipeOptions,
     rateLimiter: {
-        windowMs: ms(process.env.APP_RATE_LIMITER_MS || '15m'), // 15 minutes
+        windowMs: ms( process.env.APP_RATE_LIMITER_MS || '15m' ), // 15 minutes
         max: process.env.APP_RATE_LIMITER_MAX || 100,
-        store: getRateLimiterStore(process.env.APP_RATE_LIMITER_STORE)
+        store: getRateLimiterStore( process.env.APP_RATE_LIMITER_STORE || 'memory' )
     },
     cors: {
         origin: process.env.CORS_ORIGIN ?
-            (process.env.CORS_ORIGIN === '*' ? process.env.CORS_ORIGIN : process.env.CORS_ORIGIN.split(',')) :
+            ( process.env.CORS_ORIGIN === '*' ? process.env.CORS_ORIGIN : process.env.CORS_ORIGIN.split( ',' ) ) :
             '*',
         credentials: true,
         preflight: true,
         methods: process.env.CORS_METHODS || 'GET,POST,PUT,PATCH,DELETE'
     } as CorsOptions,
-}));
+} ) );
