@@ -36,3 +36,4 @@ documentation
 /uploads
 /emails/ties/html.*
 
+node_modules
