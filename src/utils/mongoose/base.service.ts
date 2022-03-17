@@ -1,18 +1,20 @@
-import {
+import
+{
   Types,
   Query,
   Aggregate,
   FilterQuery,
   SaveOptions,
   ModelUpdateOptions,
-  QueryFindOneAndUpdateOptions,
+  QueryFindOneAndUpdateOptions
 } from 'mongoose';
 import { ObjectType } from '../types';
 import { BaseSchema } from './base.schema';
 import { QueryItem, QueryList } from './base.type';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { FawnTaskOptions } from '../transaction/types/task.type';
-import {
+import
+{
   AnyParamConstructor,
   DocumentType,
 } from '@typegoose/typegoose/lib/types';
@@ -28,12 +30,13 @@ export abstract class BaseService<T extends BaseSchema> {
    * BaseService constructor
    * @param {ReturnModelType<AnyParamConstructor<T>>} model Model
    */
-  protected constructor(
+  protected constructor (
     /** @readonly */
     protected readonly _model: ReturnModelType<AnyParamConstructor<T>>,
-  ) {}
+  ) { }
 
-  get model() {
+  get model ()
+  {
     return this._model;
   }
 
@@ -42,8 +45,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param id Entity ID
    * @returns {mongoose.Types.ObjectId}
    */
-  toObjectId(id: string): Types.ObjectId {
-    return Types.ObjectId(id);
+  toObjectId ( id: string ): Types.ObjectId
+  {
+    return Types.ObjectId( id );
   }
 
   /**
@@ -51,8 +55,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param doc {ObjectType} Document
    * @returns {Document<T>}
    */
-  createModel(doc?: T | Partial<T>): DocumentType<T> {
-    return new this._model(doc);
+  createModel ( doc?: T | Partial<T> ): DocumentType<T>
+  {
+    return new this._model( doc );
   }
 
   /**
@@ -60,8 +65,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {mongoose.Types.ObjectId} id Entity ID.
    * @returns {QueryItem<T>}
    */
-  findById(id: Types.ObjectId): QueryItem<T> {
-    return this._model.findById(id);
+  findById ( id: Types.ObjectId ): QueryItem<T>
+  {
+    return this._model.findById( id );
   }
 
   /**
@@ -69,8 +75,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {any} Query.
    * @returns {QueryItem<T>}
    */
-  findOne(filter: any = {}): QueryItem<T> {
-    return this._model.findOne(filter);
+  findOne ( filter: any = {} ): QueryItem<T>
+  {
+    return this._model.findOne( filter );
   }
 
   /**
@@ -78,8 +85,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {any} Query.
    * @returns {QueryList<T>}
    */
-  find(filter: any = {}): QueryList<T> {
-    return this._model.find(filter);
+  find ( filter: any = {} ): QueryList<T>
+  {
+    return this._model.find( filter );
   }
 
   /**
@@ -90,7 +98,7 @@ export abstract class BaseService<T extends BaseSchema> {
   create<
     U extends T | DocumentType<T>,
     V extends { transaction?: FawnTaskOptions<T> }
-  >(doc: U, options?: V): Promise<DocumentType<T>> | FawnTaskOptions<T>;
+  > ( doc: U, options?: V ): Promise<DocumentType<T>> | FawnTaskOptions<T>;
   /**
    * Create a multiple documents of type T.
    * @param {Array<T>} docs Document
@@ -99,11 +107,11 @@ export abstract class BaseService<T extends BaseSchema> {
   create<
     U extends Array<T | DocumentType<T>>,
     V extends { transaction?: FawnTaskOptions<T> }
-  >(
+  > (
     docs: Array<T>,
     options?: V,
   ): Promise<Array<DocumentType<T>>> | FawnTaskOptions<T>;
-  create<U extends T | DocumentType<T>, V extends SaveOptions>(
+  create<U extends T | DocumentType<T>, V extends SaveOptions> (
     doc: U,
     options: SaveOptions,
   );
@@ -115,25 +123,30 @@ export abstract class BaseService<T extends BaseSchema> {
   create<
     U extends T | DocumentType<T> | Array<T | DocumentType<T>>,
     V extends { transaction?: FawnTaskOptions<T> }
-  >(
+  > (
     doc: U,
     options?: V,
-  ): Promise<DocumentType<T> | Array<DocumentType<T>>> | FawnTaskOptions<T> {
-    if (options?.transaction) {
-      if (Array.isArray(doc)) {
-        for (const i in doc) {
-          const item = doc[i];
+  ): Promise<DocumentType<T> | Array<DocumentType<T>>> | FawnTaskOptions<T>
+  {
+    if ( options?.transaction )
+    {
+      if ( Array.isArray( doc ) )
+      {
+        for ( const i in doc )
+        {
+          const item = doc[ i ];
 
-          options.transaction.save(this.model, item);
+          options.transaction.save( this.model, item );
         }
-      } else {
-        options.transaction.save(this.model, doc as DocumentType<T>);
+      } else
+      {
+        options.transaction.save( this.model, doc as DocumentType<T> );
       }
 
       return options.transaction;
     }
 
-    return this._model.create(doc);
+    return this._model.create( doc );
   }
 
   /**
@@ -141,12 +154,13 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {any} filter Filter for entity to delete
    * @return {QueryItem<T>}
    */
-  deleteOne(
+  deleteOne (
     filter: FilterQuery<T> = {},
     options: { transaction: any },
-  ): QueryItem<T> {
+  ): QueryItem<T>
+  {
     // eslint-disable-line @typescript-eslint/no-unused-vars
-    return this._model.findOneAndDelete(filter as any);
+    return this._model.findOneAndDelete( filter as any );
   }
 
   /**
@@ -154,9 +168,10 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {string} id Enitty ID
    * @return {QueryItem<T>}
    */
-  deleteById(id: Types.ObjectId, options: { transaction: any }): QueryItem<T> {
+  deleteById ( id: Types.ObjectId, options: { transaction: any } ): QueryItem<T>
+  {
     // eslint-disable-line @typescript-eslint/no-unused-vars
-    return this._model.findByIdAndDelete(id);
+    return this._model.findByIdAndDelete( id );
   }
 
   /**
@@ -164,8 +179,9 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param {any} filter
    * @return {any}
    */
-  deleteMany(filter: FilterQuery<T> = {}) {
-    return this._model.deleteMany(filter as any);
+  deleteMany ( filter: FilterQuery<T> = {} )
+  {
+    return this._model.deleteMany( filter as any );
   }
 
   /**
@@ -175,12 +191,13 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param options Options
    * @return {QueryItem<T>}
    */
-  updateOne(
+  updateOne (
     filter: FilterQuery<T> = {},
     doc?: ObjectType,
     options?: QueryFindOneAndUpdateOptions & { transaction?: any },
-  ): QueryItem<T> {
-    return this._model.findOneAndUpdate(filter as any, doc, options);
+  ): QueryItem<T>
+  {
+    return this._model.findOneAndUpdate( filter as any, doc, options );
   }
 
   /**
@@ -190,12 +207,13 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param options Options
    * @return {QueryItem<T>}
    */
-  updateById(
+  updateById (
     id: Types.ObjectId,
     doc?: ObjectType,
     options?: QueryFindOneAndUpdateOptions & { transaction?: any },
-  ): QueryItem<T> {
-    return this._model.findByIdAndUpdate(id, doc, options);
+  ): QueryItem<T>
+  {
+    return this._model.findByIdAndUpdate( id, doc, options );
   }
 
   /**
@@ -205,15 +223,17 @@ export abstract class BaseService<T extends BaseSchema> {
    * @param options Options
    * @return {QueryItem<T>}
    */
-  updateMany(
+  updateMany (
     filter: any = {},
     doc: ObjectType,
     options?: ModelUpdateOptions,
-  ): Query<T> {
-    return this._model.updateMany(filter, doc, options);
+  ): Query<T>
+  {
+    return this._model.updateMany( filter, doc, options );
   }
 
-  aggregate(pipeline: any[] = []): Aggregate<any> {
-    return this._model.aggregate(pipeline);
+  aggregate ( pipeline: any[] = [] ): Aggregate<any>
+  {
+    return this._model.aggregate( pipeline );
   }
 }

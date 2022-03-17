@@ -12,5 +12,13 @@
     "incremental": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "dist", "src/graphql.ts", "/**/*.html", "/**/*.pdf"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "log*",
+    "uploads",
+    "src/graphql.ts",
+    "/**/*.html",
+    "/**/*.pdf"
+  ]
 }

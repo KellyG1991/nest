@@ -1,26 +1,27 @@
 import logger from './config/logger';
-import { Module, HttpModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SlackTransportProvider } from './slack.provider';
 import { ConfigService, ConfigModule } from '@nestjs/config';
+import { HttpModule } from "@nestjs/axios"
 
-@Module({
+@Module( {
   imports: [
-    ConfigModule.forFeature(logger),
-    HttpModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('logger.slack.baseUrl'),
-    }),
+    ConfigModule.forFeature( logger ),
+    HttpModule.registerAsync( {
+      inject: [ ConfigService ],
+      useFactory: ( configService: ConfigService ) =>
+        configService.get( 'logger.slack.baseUrl' ),
+    } ),
   ],
   providers: [
     SlackTransportProvider,
     {
       provide: 'SLACK_CONFIG',
-      useFactory: (configService: ConfigService) =>
-        configService.get('logger.slack'),
-      inject: [ConfigService],
+      useFactory: ( configService: ConfigService ) =>
+        configService.get( 'logger.slack' ),
+      inject: [ ConfigService ],
     },
   ],
-  exports: [SlackTransportProvider],
-})
-export class WinstonModule {}
+  exports: [ SlackTransportProvider ],
+} )
+export class WinstonModule { }
